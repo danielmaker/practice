@@ -1,0 +1,258 @@
+<html>
+<head>
+<title>JavaScript: Eight Queens</title>
+</head>
+<body onload="run_unittest()">
+
+<p><h1> <div id="title">8 Queens Solution</div>  </h1></p>
+
+<p> <input type=Button Value="Click to solve" name="BtnSlove" onClick="solve_n_queens(8)" />  </p>
+
+<p> <pre id="log"></pre> </p>
+<p> <div id="result"></div> </p>
+
+
+<script language="JavaScript">
+<!--
+
+    function Queen(x, y)
+    {
+        this.x = x;
+        this.y = y;
+
+        this.kill = function(a, b)
+        {
+            return ( a == this.x ||
+                     b == this.y ||
+                     (this.x-a) == (this.y-b) ||
+                     (this.x-a) == -(this.y-b) );
+        }
+
+        this.clone = function()
+        {
+            return new Queen(this.x, this.y);
+        }
+    }
+
+    function ChessBoard(boardSize)
+    {
+        this.size = boardSize;
+        this.queens = new Array();
+
+        this.check = function(x, y)
+        {
+            if(0 > x || x >= this.size || 0 > y || y >= this.size)
+                return false;
+
+            var kill=false;
+            for(i=0; i<this.queens.length; ++i)
+            {
+                if( this.queens[i].kill(x,y))
+                {
+                    kill=true;
+                    break;
+                }
+            }
+            return !kill;
+        }
+
+        this.add = function(queen)
+        {
+            if(this.check(queen.x, queen.y)) {
+                this.queens[this.queens.length] = queen;
+                return true;
+            }
+            return false;
+        }
+
+        this.clone = function()
+        {
+            var cloned = new ChessBoard(this.size);
+            for(i=0; i<this.queens.length; ++i)
+            {
+                var qn = this.queens[i];
+                cloned.queens[cloned.queens.length] = new Queen(qn.x, qn.y);
+            }
+
+            return cloned;
+
+        }
+
+        this.toString = function()
+        {
+            var str = "ChessBoard(size="+this.size+", queens="+this.queens.length+"): ";
+            for(i=0; i<this.queens.length; ++i)
+            {
+                var qn = this.queens[i];
+                str += "("+qn.x+", "+qn.y+"), ";
+            }
+            return str;
+        }
+    }
+
+    // -------------------------------------------------------------------------
+
+    function unittest()
+    {
+        this.assertTrue = function(condition)
+        {
+            if(condition != true) {
+                console.log("assertTrue fail:" + arguments.callee.caller.toString());
+            }
+        }
+
+        this.assertFalse = function(condition)
+        {
+            (new Error).lineNumber;
+            if(condition != false) {
+                console.log("assertFalse fail:" + arguments.callee.caller.toString());
+            }
+        }
+
+        this.testQueenKill = function()
+        {
+            var queen = new Queen(1,1);
+
+            this.assertTrue( queen.kill(0, 0));
+            this.assertTrue( queen.kill(0, 1));
+            this.assertTrue( queen.kill(0, 2));
+            this.assertTrue( queen.kill(1, 0));
+            this.assertTrue( queen.kill(1, 1));
+            this.assertTrue( queen.kill(1, 2));
+            this.assertTrue( queen.kill(2, 0));
+            this.assertTrue( queen.kill(2, 1));
+            this.assertTrue( queen.kill(2, 2));
+
+            this.assertTrue( queen.kill(3, 3));
+            this.assertTrue( queen.kill(1, 3));
+            this.assertTrue( queen.kill(3, 1));
+            this.assertTrue( queen.kill(4, 1));
+
+            this.assertFalse( queen.kill(4, 2));
+            this.assertFalse( queen.kill(4, 3));
+            this.assertFalse( queen.kill(4, 5));
+        }
+
+        this.testChessboardAdd = function()
+        {
+            var board = new ChessBoard(8);
+            this.assertFalse( board.add( new Queen(8, 8)) );
+            this.assertFalse( board.add( new Queen(-1, -1)) );
+            this.assertTrue( board.add( new Queen(0, 0)) );
+            this.assertFalse( board.add( new Queen(0, 0)) );
+
+            var board2 = new ChessBoard(8)
+            this.assertTrue( board2.add( new Queen(0, 0)) );
+            this.assertFalse( board2.add( new Queen(0, 0)) );
+            this.assertFalse( board2.add( new Queen(1, 1)) );
+            this.assertTrue( board2.add( new Queen(2, 1)) );
+            this.assertFalse( board2.add( new Queen(2, 1)) );
+
+        }
+    }
+
+    // -------------------------------------------------------------------------
+
+    function run_unittest()
+    {
+        var test_runner = new unittest();
+        test_runner.testQueenKill();
+        test_runner.testChessboardAdd();
+    }
+
+    // -------------------------------------------------------------------------
+
+    // starts from start_x to search for a position to to put a queen on the position in the row j
+    function try_to_put_queen(board, start_x, j)
+    {
+        var safe = false;
+        var i=0;
+        for(i=start_x; i<board.size; ++i)
+        {
+            safe = board.add(new Queen(i,j));
+            if(safe) {
+                break;
+            }
+
+        }
+        return safe;
+    }
+
+    // solve n-queen problem by backtracking algorithm
+    function solve_n_queens(num_of_queens)
+    {
+        var steps = new Array();
+        var board = new ChessBoard(num_of_queens);
+        var next_x = 0;
+        var next_y = 0;
+
+        while(true)
+        {
+            var added = try_to_put_queen(board, next_x, next_y);
+            if(added)
+            {
+                steps.push( board.clone() );
+                document.getElementById("log").innerHTML += board.toString() + "<br/>";
+
+                // move to the next row
+                next_x = 0;
+                next_y = board.queens.length;
+
+                if(board.queens.length >= num_of_queens)
+                {
+                    document.getElementById("result").innerHTML = "Solved! <br/>" + board.toString() + "<br/>";
+                    return;
+                }
+            }
+            else
+            {
+                if (steps.length>0 )
+                {
+                    var last_board = steps[steps.length-1];
+                    if(last_board.queens.length>0)
+                    {
+                        var last_queen = last_board.queens[last_board.queens.length-1];
+
+                        next_x = last_queen.x + 1;
+                        next_y = last_queen.y;
+
+                        // backtrace to the previous step
+                        steps.pop();
+                        if (steps.length>0 )
+                        {
+                            board = steps[steps.length-1].clone();
+                        }
+                        else
+                        {
+                            board = new ChessBoard(num_of_queens);
+                            if (next_x >= num_of_queens)
+                            {
+                                document.getElementById("result").innerHTML = "Cannot solve <br/>";
+                                return;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        document.getElementById("result").innerHTML = "Error! Should not reach here <br/>";
+                        return;
+                    }
+                }
+                else
+                {
+                    document.getElementById("result").innerHTML = "Error! Should not reach here <br/>";
+                    return;
+                }
+            }
+
+        } // while
+
+    } // solve_n_queens
+
+
+
+//-->
+</script>
+
+</body>
+</html>
