@@ -1,0 +1,7 @@
+#####################
+# ../source
+
+include_directories( ../source )
+
+set( SOURCES ${SOURCES} ../source/eight_queens.cpp)
+
