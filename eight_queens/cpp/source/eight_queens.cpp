@@ -42,7 +42,7 @@ public:
     /// @return true: if the position is safe
     bool Check(int x, int y) const
     {
-        if(x >= m_BoardSize || y >= m_BoardSize) {
+        if(0 > x || x >= (int)m_BoardSize || 0 > y || y >= (int)m_BoardSize) {
             return false;
         }
 
@@ -234,7 +234,7 @@ int main(int argc, char** argv)
 {
     ::testing::InitGoogleTest(&argc, argv);
 
-    bool test_result = RUN_ALL_TESTS();
+    int test_result = RUN_ALL_TESTS();
 
     if(0 == test_result)
     {
