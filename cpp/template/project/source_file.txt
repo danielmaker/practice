@@ -1,0 +1,8 @@
+#####################
+# ../source
+
+include_directories( ../source )
+
+set( SOURCES ${SOURCES} ../source/main.cpp 
+           ../source/function_as_template_argument.cpp)
+
