@@ -3,6 +3,7 @@
 
 include_directories( ../source )
 
-set( SOURCES ${SOURCES} ../source/main.cpp 
+set( SOURCES ${SOURCES} ../source/variadic_template.cpp 
+           ../source/main.cpp 
            ../source/function_as_template_argument.cpp)
 
