@@ -23,22 +23,27 @@ add_executable( ${TARGET} ${SOURCES})
 #############################
 # gtest
 
-include_directories( ../../Imports/gtest/include )
+string(TOLOWER ${CMAKE_SYSTEM_NAME} PLATFORM)
+string(TOLOWER ${CMAKE_CXX_COMPILER_ID} COMPILER)
+
+set(GTEST_PATH ../../Imports/gtest)
+set(GTEST_LIB_PATH "${CMAKE_CURRENT_LIST_DIR}/${GTEST_PATH}/lib/${PLATFORM}-${COMPILER}")
+include_directories( ${GTEST_PATH}/include )
 
 if(MSVC)
     if(CMAKE_BUILD_TYPE MATCHES  Debug)
-        target_link_libraries( ${TARGET} ${CMAKE_SOURCE_DIR}/../../Imports/gtest/lib/msvc2010/gtest-mdd.lib )
+        target_link_libraries(${TARGET} ${CMAKE_SOURCE_DIR}/${GTEST_PATH}/lib/msvc2010/gtest-mdd.lib)
     else()
-        target_link_libraries( ${TARGET} ${CMAKE_SOURCE_DIR}/../../Imports/gtest/lib/msvc2010/gtest-md.lib )
+        target_link_libraries(${TARGET} ${CMAKE_SOURCE_DIR}/${GTEST_PATH}/lib/msvc2010/gtest-md.lib)
     endif (CMAKE_BUILD_TYPE MATCHES  Debug)
 endif(MSVC)
 
 if(APPLE)
-    target_link_libraries( ${TARGET} ${CMAKE_SOURCE_DIR}/../../Imports/gtest/lib/macx-llvm/libgtest.a )
+    target_link_libraries(${TARGET} ${CMAKE_SOURCE_DIR}/${GTEST_PATH}/lib/macx-llvm/libgtest.a)
 endif(APPLE)
 
 if("Linux" STREQUAL ${CMAKE_SYSTEM_NAME})
-    target_link_libraries( ${TARGET} ${CMAKE_SOURCE_DIR}/../../Imports/gtest/lib/linux-g++/libgtest.a )
+    target_link_libraries(${TARGET} ${GTEST_LIB_PATH}/libgtest.a)
     #pthread
     find_package(Threads REQUIRED)
     if(THREADS_HAVE_PTHREAD_ARG)
@@ -48,4 +53,3 @@ if("Linux" STREQUAL ${CMAKE_SYSTEM_NAME})
       target_link_libraries(${TARGET} "${CMAKE_THREAD_LIBS_INIT}")
     endif()
 endif()
-
