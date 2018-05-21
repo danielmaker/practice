@@ -4,6 +4,7 @@
 #include <codecvt>
 #include <iostream>
 
+// http://en.cppreference.com/w/cpp/language/string_literal
 // http://en.cppreference.com/w/cpp/locale/codecvt_utf8
 std::string ws2s(const std::wstring& wstr)
 {
@@ -21,7 +22,6 @@ std::wstring s2ws(const std::string& str)
     return converter.from_bytes(str);
 }
 
-
 int main()
 {
     // http://stackoverflow.com/questions/17641718/how-to-output-unicode-characters-in-c-c
@@ -32,14 +32,16 @@ int main()
     std::string str = "Hello World";
     std::string strZH = "這是中文";
     std::wstring wstr = L"這是中文";
+    std::string strUft8 = u8"這是中文";
 
     std::cout  << "string: "  << str   << std::endl;
     std::cout  << "string: "  << strZH << std::endl;
     std::wcout << "wstring: " << wstr  << std::endl;
+
+    std::cout  << "string-utf8: "  << strUft8 << std::endl;
 
     std::cout  << "convert to string: "  << ws2s(wstr)  << std::endl;
     std::wcout << "convert to wstring: " << s2ws(strZH) << std::endl;
 
     return 0;
 }
-
