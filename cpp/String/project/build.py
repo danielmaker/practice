@@ -9,18 +9,20 @@ import platform
 import subprocess
 
 def copyToStdOut(stream):
-    for c in iter(lambda: stream.read(1), ''):
-        sys.stdout.write(c)
+    for line in stream:
+        print(line.decode("utf-8"), end = '')
 
 def runProcess(processParams):
-    process = subprocess.Popen(processParams, stdout = subprocess.PIPE, stderr = subprocess.STDOUT)
-    while process.poll() is None:
+    try:
+        process = subprocess.Popen(processParams, stdout = subprocess.PIPE, stderr = subprocess.STDOUT)
+        while process.poll() is None:
+            copyToStdOut(process.stdout)
         copyToStdOut(process.stdout)
-    copyToStdOut(process.stdout)
-    return process.returncode
+        return process.returncode
+    except:
+        print("{}: {}".format(sys.exc_value, processParams))
 
 def main(argv):
-
     parser = argparse.ArgumentParser()
     parser.add_argument(
         '-c', '--clean',
