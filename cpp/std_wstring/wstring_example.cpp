@@ -39,6 +39,7 @@ int main()
 
     std::string str = "Hello World";
     std::string strZH = "這是中文";
+    std::string strRaw = R"(This is a "raw" string)";
     std::wstring wstr = L"這是中文";
     std::string strUtf8 = u8"這是中文";
     std::u16string strUtf16 = u"這是中文";
@@ -46,6 +47,7 @@ int main()
 
     std::cout  << "string: "  << str   << std::endl;
     std::cout  << "string: "  << strZH << std::endl;
+    std::cout  << "raw string: "  << strRaw << std::endl;
     std::wcout << "wstring: " << wstr  << std::endl;
 
     std::cout  << "convert to string: "  << ws2s(wstr)  << std::endl;
