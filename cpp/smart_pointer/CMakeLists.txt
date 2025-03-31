@@ -1,28 +1,27 @@
-cmake_minimum_required(VERSION 3.1)
+cmake_minimum_required(VERSION 3.26)
 
 set(TARGET smart_pointer)
 project( ${TARGET} )
 
+add_executable(${TARGET} "")
+set_property(TARGET ${TARGET} PROPERTY CXX_STANDARD 20)
+set_property(TARGET ${TARGET} PROPERTY CXX_STANDARD_REQUIRED ON)
 
-set(CMAKE_BUILD_TYPE Debug)
-
-message( CMAKE_SYSTEM_NAME=${CMAKE_SYSTEM_NAME} )
-message( CMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} )
-message( CMAKE_C_COMPILER=${CMAKE_C_COMPILER} )
-
-set(CMAKE_CXX_STANDARD 14)
+if(MSVC)
+  add_definitions(-D_UNICODE)
+  add_definitions(-DUNICODE)
+  add_definitions(-DNOMINMAX)
+  target_compile_options(${TARGET} PRIVATE "/utf-8")
+endif()
 
 #############################
 
-# include_directories( ./ )
-
 set(HEADER_FILES
-    )
 
+)
 
 set(SOURCE_FILES
-    smart_pointer.cpp
-    )
+  smart_pointer.cpp
+)
 
-add_executable(${TARGET} ${HEADER_FILES} ${SOURCE_FILES})
-
+target_sources(${TARGET} PRIVATE ${HEADER_FILES} ${SOURCE_FILES})
