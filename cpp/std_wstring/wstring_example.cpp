@@ -3,6 +3,7 @@
 #include <locale>
 #include <codecvt>
 #include <iostream>
+#include <format>
 
 #if defined(_WIN32) || defined(_WIN64)
 #include <windows.h>
@@ -95,6 +96,11 @@ int main()
     std::cout  << "UnicodeToAnsi: " << UnicodeToAnsi(wstr.c_str())  << std::endl;
     std::wcout << "AnsiToUnicode: " << AnsiToUnicode(strZH.c_str()) << std::endl;
 #endif
+
+    // https://www.cppstories.com/2020/02/extra-format-cpp20.html/
+    const int value0 = 100;
+    const int value1 = 123;
+    std::cout  << std::format("value0={0}, hex:0x{0:02x}; value1={1}, hex:0x{1:02x}", value0, value1) << std::endl;
 
     return 0;
 }
